@@ -1,0 +1,50 @@
+html,
+body,
+#app {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 15px;
+    line-height: 1.6em;
+    background: linear-gradient(0, #292f49, #536977);
+    color: #f8f8f8;
+    text-shadow: 1px 1px 1px #222;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+.flex {
+    display: flex;
+
+    &.flex-vertical {
+        flex-direction: column;
+    }
+
+    &.gap {
+        gap: 0.5rem;
+    }
+
+    & > * {
+        flex: 1;
+
+        &.flex-auto {
+            flex: 0 0 auto;
+        }
+    }
+}
+
+.text-centered {
+    text-align: center;
+}
