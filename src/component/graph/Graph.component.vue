@@ -2,18 +2,24 @@
     <div class="graph-component flex flex-vertical">
         <div class="graph-top flex flex-auto gap">
             <div></div>
-            <div class="flex-auto">
-                <small>Min: </small>
-                <strong :title="minDatum.date">{{ minDatum.value }}</strong>
-            </div>
-            <div class="flex-auto">
-                <small>Max: </small>
-                <strong :title="maxDatum.date">{{ maxDatum.value }}</strong>
+            <div class="flex flex-auto gap-small">
+                <div class="flex-auto">
+                    <small>Min: </small>
+                    <strong :title="minDatum.date">{{ minDatum.value }}</strong>
+                </div>
+                <div class="flex-auto">
+                    <small>Max: </small>
+                    <strong :title="maxDatum.date">{{ maxDatum.value }}</strong>
+                </div>
             </div>
             <div class="flex-auto">
                 <small>Latest: </small>
                 <strong :title="lastDatum.date">{{ lastDatum.value }}</strong>
                 <strong class="diff-value" :class="{ [diffColour]: true }"> (<span class="value">{{ latestDiffValue }}</span>)</strong>
+            </div>
+            <div class="flex-auto">
+                <small>Total: </small>
+                <strong>{{ Intl.NumberFormat().format(cumulativeTotal) }}</strong>
             </div>
             <div></div>
         </div>
@@ -93,6 +99,7 @@ export default {
             maxDatum,
             firstDatum,
             lastDatum,
+            cumulativeTotal,
         } = useData(options);
 
         const graphComponent = ref<HTMLDivElement | null>(null);
@@ -198,6 +205,8 @@ export default {
             maxDatum,
             firstDatum,
             lastDatum,
+            cumulativeTotal,
+
             latestDiffValue,
 
             displayDateRange,

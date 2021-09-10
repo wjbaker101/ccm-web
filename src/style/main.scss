@@ -32,8 +32,12 @@ body {
         flex-direction: column;
     }
 
-    &.gap {
+    &.gap-small {
         gap: 0.5rem;
+    }
+
+    &.gap {
+        gap: 1rem;
     }
 
     & > * {

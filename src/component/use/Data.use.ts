@@ -50,6 +50,13 @@ export function useData(options: Ref<Options>) {
         return displayData.value.slice(-1)[0];
     });
 
+    const cumulativeTotal = computed<number>(() => {
+        if (fullData.value.length === 0)
+            return 0;
+
+        return fullData.value[fullData.value.length - 1].value;
+    });
+
     return {
         displayData,
 
@@ -58,5 +65,7 @@ export function useData(options: Ref<Options>) {
 
         firstDatum,
         lastDatum,
+
+        cumulativeTotal,
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <header role="banner" class="flex gap">
+    <header role="banner" class="flex gap-small">
         <div class="flex-auto">
             <strong>Custom Crosshair Mod Stats</strong>
         </div>
