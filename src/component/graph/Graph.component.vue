@@ -84,6 +84,7 @@ export default {
 
                 return total;
             },
+            outliers: new Set(outlierDates),
         }));
 
         const {

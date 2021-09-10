@@ -28,7 +28,9 @@ export function useData(options: Ref<Options>) {
             ? totalData
             : totalData.slice(-options.value.maxDataCount);
 
-        return slicedData;
+        const filteredData = slicedData.filter(x => !options.value.outliers.has(x.date.format('DD/MM/YYYY')));
+
+        return filteredData;
     });
 
     const minDatum = computed<Datum>(() => datumService.minArray(displayData.value));
