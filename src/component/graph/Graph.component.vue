@@ -53,6 +53,8 @@
 <script lang="ts">
 import { computed, onMounted, onUnmounted, reactive, ref } from 'vue';
 
+import outlierDates from '@/data/outlier-dates.json';
+
 import { useData } from '@/component/use/Data.use';
 
 import { Options } from '@/type/Options.type';

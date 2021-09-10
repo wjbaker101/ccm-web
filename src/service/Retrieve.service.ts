@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import oldData from '@/oldData.json';
+import oldData from '@/data/old-data.json';
 
 import { Datum, EMPTY_DATUM } from '@/type/Datum.type';
 
