@@ -18,9 +18,21 @@
             <div></div>
         </div>
         <div ref="graphComponent" class="graph-container">
-            <svg :width="graphWidth" :height="graphHeight" class="graph-canvas" :viewbox="`0 0 ${graphWidth} ${graphHeight}`">
+            <svg
+                :width="graphWidth"
+                :height="graphHeight"
+                class="graph-canvas"
+                :viewbox="`0 0 ${graphWidth} ${graphHeight}`"
+                @mousemove="onMouseMove"
+                @mouseleave="onMouseLeave"
+            >
                 <path class="current-value-horizontal-line" :d="currentValueHorizontalLine" stroke="rgba(23, 107, 192, 0.4)" fill="none" />
                 <path class="data-line" :d="valuesLine" stroke="#ffb400" fill="none" />
+                <g class="hover-indicator-group" v-if="hoverIndicator.isVisible">
+                    <path :d="`M${hoverIndicator.x} 0 L${hoverIndicator.x} ${graphHeight}`" stroke="#ffb400" fill="none" />
+                    <text :x="hoverIndicator.x" :y="mousePosition.y - 28" fill="#fff" text-anchor="middle">{{ hoverIndicator.label.date }}</text>
+                    <text :x="hoverIndicator.x" :y="mousePosition.y - 10" fill="#fff" text-anchor="middle">{{ hoverIndicator.label.value }}</text>
+                </g>
             </svg>
         </div>
         <div class="graph-bottom flex flex-auto gap">
@@ -39,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref } from 'vue';
 
 import { useData } from '@/component/use/Data.use';
 
@@ -155,6 +167,21 @@ export default {
             window.removeEventListener('resize', onWindowResize);
         });
 
+        const hoverIndicator = reactive({
+            isVisible: false,
+            x: 0,
+            label: {
+                value: '',
+                date: '',
+                y: 0,
+            },
+        });
+
+        const mousePosition = reactive({
+            x: 0,
+            y: 0,
+        });
+
         return {
             graphComponent,
 
@@ -174,8 +201,33 @@ export default {
 
             diffColour,
 
+            hoverIndicator,
+            mousePosition,
+
             formatDate(date: Dayjs): string {
                 return date.format('DD/MM/YYYY');
+            },
+
+            onMouseMove(event: MouseEvent) {
+                mousePosition.x = event.offsetX;
+                mousePosition.y = event.offsetY;
+
+                const ratio = mousePosition.x / graphWidth.value;
+
+                const dataIndex = Math.floor(displayData.value.length * ratio);
+
+                hoverIndicator.isVisible = true;
+                hoverIndicator.x = graphWidth.value / (displayData.value.length - 1) * dataIndex;
+
+                const datum = displayData.value[dataIndex];
+
+                hoverIndicator.label.value = String(datum.value);
+                hoverIndicator.label.date = datum.date.format('DD/MM/YYYY');
+                hoverIndicator.label.y = valueToY(datum.value);
+            },
+
+            onMouseLeave() {
+                hoverIndicator.isVisible = false;
             },
         }
     },
