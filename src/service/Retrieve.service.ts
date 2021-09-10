@@ -21,7 +21,7 @@ class RetrieveService {
     }
 
     public getOldData(): Array<Datum> {
-        return oldData.filter(x => x[1] !== "0").map(x => {
+        return oldData.map(x => {
             const date = dayjs(x[0], 'DD/MM/YYYY').hour(10).second(6);
             const value = Number(x[1]);
 
