@@ -36,8 +36,8 @@
                 <path class="data-line" :d="valuesLine" stroke="#ffb400" fill="none" />
                 <g class="hover-indicator-group" v-if="hoverIndicator.isVisible">
                     <path :d="`M${hoverIndicator.x} 0 L${hoverIndicator.x} ${graphHeight}`" stroke="#ffb400" fill="none" />
-                    <text :x="hoverIndicator.x" :y="mousePosition.y - 28" fill="#fff" text-anchor="middle">{{ hoverIndicator.label.date }}</text>
-                    <text :x="hoverIndicator.x" :y="mousePosition.y - 10" fill="#fff" text-anchor="middle">{{ hoverIndicator.label.value }}</text>
+                    <text :x="hoverIndicator.x" :y="hoverIndicator.label.y" fill="#fff" dominant-baseline="hanging" text-anchor="middle">{{ hoverIndicator.label.date }}</text>
+                    <text :x="hoverIndicator.x" :y="hoverIndicator.label.y + 18" fill="#fff" dominant-baseline="hanging" text-anchor="middle">{{ hoverIndicator.label.value }}</text>
                 </g>
             </svg>
         </div>
@@ -233,9 +233,11 @@ export default {
 
                 const datum = displayData.value[dataIndex];
 
+                const labelY = Math.max(5, mousePosition.y - 45);
+
                 hoverIndicator.label.value = String(datum.value);
                 hoverIndicator.label.date = datum.date.format('DD/MM/YYYY');
-                hoverIndicator.label.y = valueToY(datum.value);
+                hoverIndicator.label.y = labelY;
             },
 
             onMouseLeave() {
