@@ -14,11 +14,11 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 import GraphComponent from '@/component/graph/Graph.component.vue';
 
-export default {
+export default defineComponent({
     name: 'App',
 
     components: {
@@ -32,7 +32,7 @@ export default {
             isFullDataEnabled,
         }
     },
-}
+})
 </script>
 
 <style lang="scss">

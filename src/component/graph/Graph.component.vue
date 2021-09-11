@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { computed, onMounted, onUnmounted, reactive, ref } from 'vue';
+import { computed, defineComponent, onMounted, onUnmounted, reactive, ref } from 'vue';
 
 import outlierDates from '@/data/outlier-dates.json';
 
@@ -70,7 +70,7 @@ interface Props {
     isFullDataEnabled: boolean,
 }
 
-export default {
+export default defineComponent({
     name: 'GraphComponent',
 
     props: {
@@ -245,7 +245,7 @@ export default {
             },
         }
     },
-}
+})
 </script>
 
 <style lang="scss">
