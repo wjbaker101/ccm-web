@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomCrosshairModApi", "CustomCrosshairModApi.csproj", "{43299D9D-9DB8-4162-A28A-C1601334CB14}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43299D9D-9DB8-4162-A28A-C1601334CB14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43299D9D-9DB8-4162-A28A-C1601334CB14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43299D9D-9DB8-4162-A28A-C1601334CB14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43299D9D-9DB8-4162-A28A-C1601334CB14}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2D55CB42-26DE-46C6-8BAA-38E4761C0F0E}
+	EndGlobalSection
+EndGlobal
