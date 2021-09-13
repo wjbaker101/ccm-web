@@ -32,10 +32,15 @@ namespace CustomCrosshairModApi
             app.UseRouting();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
+            app.UseSpa(spa =>
             {
-                endpoints.MapControllers();
+                spa.Options.SourcePath = "wwwroot";
             });
+
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }
