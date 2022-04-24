@@ -63,7 +63,7 @@ import outlierDates from '@/data/outlier-dates.json';
 
 import { useData } from '@/component/use/Data.use';
 
-import { Options } from '@/type/Options.type';
+import { DataToDisplay, Options } from '@/type/Options.type';
 import { Dayjs } from 'dayjs';
 
 interface Props {
@@ -78,7 +78,10 @@ export default defineComponent({
     },
 
     setup(props: Props) {
+        const dataToDisplay = ref<DataToDisplay>('pastebinUsages');
+
         const options = computed<Options>(() => ({
+            dataToDisplay: dataToDisplay.value,
             isFullData: props.isFullDataEnabled,
             maxDataCount: 90,
             transform: (total, datum, index, array) => {
