@@ -8,16 +8,12 @@ class RetrieveService {
 
     constructor() {}
 
+    public async getCurseForgeTotalDownloads(): Promise<Array<Datum>> {
+        return this.parseUrl('https://raw.githubusercontent.com/wjbaker101/ccm-scraper/master/CurseForge_TotalDownloads.txt');
+    }
+
     public async getPastebinUsages(): Promise<Array<Datum>> {
-        const url = 'https://raw.githubusercontent.com/wjbaker101/ccm-scraper/master/output.txt';
-
-        const response = await fetch(url);
-        const text = await response.text();
-        const lines = text.split('\n');
-
-        return lines
-            .map(this.parseLine)
-            .filter(x => x !== EMPTY_DATUM);
+        return this.parseUrl('https://raw.githubusercontent.com/wjbaker101/ccm-scraper/master/output.txt');
     }
 
     public getOldData(): Array<Datum> {
@@ -30,6 +26,16 @@ class RetrieveService {
                 value,
             }
         });
+    }
+
+    private async parseUrl(url: string): Promise<Array<Datum>> {
+        const response = await fetch(url);
+        const text = await response.text();
+        const lines = text.split('\n');
+
+        return lines
+            .map(this.parseLine)
+            .filter(x => x !== EMPTY_DATUM);
     }
 
     private parseLine(line: string): Datum {
