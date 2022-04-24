@@ -31,9 +31,14 @@ export function useData(options: Ref<Options>) {
             return [];
 
         const oldData = retrieveService.getOldData().reduce(options.value.transform, Array<Datum>());
-        const scraperData = fullData.value.reduce(options.value.transform, Array<Datum>());
 
-        const totalData = oldData.concat(scraperData);
+        const scraperData = fullData.value.length > 1
+            ? fullData.value.reduce(options.value.transform, Array<Datum>())
+            : [ fullData.value[0] ];
+
+        const totalData = options.value.dataToDisplay === 'pastebinUsages'
+            ? oldData.concat(scraperData)
+            : scraperData;
 
         const slicedData: Array<Datum> = options.value.isFullData
             ? totalData
