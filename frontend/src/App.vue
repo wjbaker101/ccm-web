@@ -16,7 +16,7 @@
             </div>
         </div>
     </header>
-    <GraphComponent :isFullDataEnabled="isFullDataEnabled" />
+    <GraphComponent :isFullDataEnabled="isFullDataEnabled" :dataToDisplay="dataToDisplay" />
 </template>
 
 <script lang="ts">

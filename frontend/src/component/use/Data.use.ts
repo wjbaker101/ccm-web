@@ -6,14 +6,20 @@ import { Options } from '@/type/Options.type';
 import { datumService } from '@/service/Datum.service';
 import { retrieveService } from '@/service/Retrieve.service';
 
-const fullData = ref<Array<Datum>>([]);
+const pastebinUsages = ref<Array<Datum>>([]);
 
 (async () => {
-    const data = await retrieveService.get();
-    fullData.value = data;
+    pastebinUsages.value = await retrieveService.getPastebinUsages();
 })();
 
 export function useData(options: Ref<Options>) {
+
+    const fullData = computed<Array<Datum>>(() => {
+        if (options.value.dataToDisplay === 'pastebinUsages')
+            return pastebinUsages.value;
+
+        return [];
+    });
 
     const displayData = computed<Array<Datum>>(() => {
         if (fullData.value.length === 0)

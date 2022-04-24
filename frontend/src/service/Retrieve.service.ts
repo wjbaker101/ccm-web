@@ -10,7 +10,7 @@ class RetrieveService {
 
     constructor() {}
 
-    public async get(): Promise<Array<Datum>> {
+    public async getPastebinUsages(): Promise<Array<Datum>> {
         const response = await fetch(this.url);
         const text = await response.text();
         const lines = text.split('\n');

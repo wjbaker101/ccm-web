@@ -57,31 +57,32 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, onUnmounted, reactive, ref } from 'vue';
+import { computed, defineComponent, onMounted, onUnmounted, PropType, reactive, ref } from 'vue';
+import { Dayjs } from 'dayjs';
 
 import outlierDates from '@/data/outlier-dates.json';
 
 import { useData } from '@/component/use/Data.use';
 
 import { DataToDisplay, Options } from '@/type/Options.type';
-import { Dayjs } from 'dayjs';
-
-interface Props {
-    isFullDataEnabled: boolean,
-}
 
 export default defineComponent({
     name: 'GraphComponent',
 
     props: {
-        isFullDataEnabled: Boolean,
+        isFullDataEnabled: {
+            type: Boolean,
+            required: true,
+        },
+        dataToDisplay: {
+            type: String,
+            required: true,
+        },
     },
 
-    setup(props: Props) {
-        const dataToDisplay = ref<DataToDisplay>('pastebinUsages');
-
+    setup(props) {
         const options = computed<Options>(() => ({
-            dataToDisplay: dataToDisplay.value,
+            dataToDisplay: props.dataToDisplay as DataToDisplay,
             isFullData: props.isFullDataEnabled,
             maxDataCount: 90,
             transform: (total, datum, index, array) => {
