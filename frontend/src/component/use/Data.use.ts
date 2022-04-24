@@ -7,9 +7,11 @@ import { datumService } from '@/service/Datum.service';
 import { retrieveService } from '@/service/Retrieve.service';
 
 const pastebinUsages = ref<Array<Datum>>([]);
+const curseForgeTotalDownloads = ref<Array<Datum>>([]);
 
 (async () => {
     pastebinUsages.value = await retrieveService.getPastebinUsages();
+    curseForgeTotalDownloads.value = await retrieveService.getCurseForgeTotalDownloads();
 })();
 
 export function useData(options: Ref<Options>) {
@@ -17,6 +19,9 @@ export function useData(options: Ref<Options>) {
     const fullData = computed<Array<Datum>>(() => {
         if (options.value.dataToDisplay === 'pastebinUsages')
             return pastebinUsages.value;
+
+        if (options.value.dataToDisplay === 'curseForgeTotalDownloads')
+            return curseForgeTotalDownloads.value;
 
         return [];
     });
