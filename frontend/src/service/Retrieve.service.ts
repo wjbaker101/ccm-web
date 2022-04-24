@@ -6,12 +6,12 @@ import { Datum, EMPTY_DATUM } from '@/type/Datum.type';
 
 class RetrieveService {
 
-    private readonly url = 'https://raw.githubusercontent.com/wjbaker101/ccm-scraper/master/output.txt';
-
     constructor() {}
 
     public async getPastebinUsages(): Promise<Array<Datum>> {
-        const response = await fetch(this.url);
+        const url = 'https://raw.githubusercontent.com/wjbaker101/ccm-scraper/master/output.txt';
+
+        const response = await fetch(url);
         const text = await response.text();
         const lines = text.split('\n');
 
