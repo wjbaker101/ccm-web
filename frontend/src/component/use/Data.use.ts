@@ -1,13 +1,18 @@
 import { computed, ref, Ref } from 'vue';
 
 import { Datum, EMPTY_DATUM } from '@/type/Datum.type';
-import { Options } from '@/type/Options.type';
+import { DataToDisplay, Options } from '@/type/Options.type';
 
 import { datumService } from '@/service/Datum.service';
 import { retrieveService } from '@/service/Retrieve.service';
 
 import pastebinUsagesOutliers from '@/data/outlier-dates.json';
 import curseforgeDownloadsOutlierDates from '@/data/curseforge-downloads-outlier-dates.json';
+
+const outliersMapping: Record<DataToDisplay, string[]> = {
+    'pastebinUsages': pastebinUsagesOutliers,
+    'curseForgeTotalDownloads': curseforgeDownloadsOutlierDates,
+};
 
 const pastebinUsages = ref<Array<Datum>>([]);
 const curseForgeTotalDownloads = ref<Array<Datum>>([]);
@@ -47,17 +52,9 @@ export function useData(options: Ref<Options>) {
             ? totalData
             : totalData.slice(-options.value.maxDataCount);
 
-        if (options.value.dataToDisplay === 'pastebinUsages') {
-            return slicedData
-                .filter(x => !pastebinUsagesOutliers.includes(x.date.format('DD/MM/YYYY')));
-        }
+        const outliers = outliersMapping[options.value.dataToDisplay];
 
-        if (options.value.dataToDisplay === 'curseForgeTotalDownloads') {
-            return slicedData
-                .filter(x => !curseforgeDownloadsOutlierDates.includes(x.date.format('DD/MM/YYYY')));
-        }
-
-        return slicedData;
+        return slicedData.filter(x => !outliers.includes(x.date.format('DD/MM/YYYY')));
     });
 
     const minDatum = computed<Datum>(() => datumService.minArray(displayData.value));
