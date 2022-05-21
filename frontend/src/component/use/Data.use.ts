@@ -6,6 +6,9 @@ import { Options } from '@/type/Options.type';
 import { datumService } from '@/service/Datum.service';
 import { retrieveService } from '@/service/Retrieve.service';
 
+import pastebinUsagesOutliers from '@/data/outlier-dates.json';
+import curseforgeDownloadsOutlierDates from '@/data/curseforge-downloads-outlier-dates.json';
+
 const pastebinUsages = ref<Array<Datum>>([]);
 const curseForgeTotalDownloads = ref<Array<Datum>>([]);
 
@@ -44,9 +47,17 @@ export function useData(options: Ref<Options>) {
             ? totalData
             : totalData.slice(-options.value.maxDataCount);
 
-        const filteredData = slicedData.filter(x => !options.value.outliers.has(x.date.format('DD/MM/YYYY')));
+        if (options.value.dataToDisplay === 'pastebinUsages') {
+            return slicedData
+                .filter(x => !pastebinUsagesOutliers.includes(x.date.format('DD/MM/YYYY')));
+        }
 
-        return filteredData;
+        if (options.value.dataToDisplay === 'curseForgeTotalDownloads') {
+            return slicedData
+                .filter(x => !curseforgeDownloadsOutlierDates.includes(x.date.format('DD/MM/YYYY')));
+        }
+
+        return [];
     });
 
     const minDatum = computed<Datum>(() => datumService.minArray(displayData.value));
