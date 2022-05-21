@@ -57,7 +57,7 @@ export function useData(options: Ref<Options>) {
                 .filter(x => !curseforgeDownloadsOutlierDates.includes(x.date.format('DD/MM/YYYY')));
         }
 
-        return [];
+        return slicedData;
     });
 
     const minDatum = computed<Datum>(() => datumService.minArray(displayData.value));
