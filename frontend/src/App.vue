@@ -12,6 +12,8 @@
                 <select v-model="dataToDisplay">
                     <option value="pastebinUsages">Pastebin Usages</option>
                     <option value="curseForgeTotalDownloads">CurseForge Total Downloads</option>
+                    <option value="modrinthTotalDownloads">Modrinth Downloads</option>
+                    <option value="modrinthTotalFollowers">Modrinth Followers</option>
                 </select>
             </div>
         </div>
