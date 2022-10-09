@@ -16,6 +16,14 @@ class RetrieveService {
         return this.parseUrl('https://raw.githubusercontent.com/wjbaker101/ccm-scraper/master/output.txt');
     }
 
+    public async getModrinthTotalDownloads(): Promise<Array<Datum>> {
+        return this.parseUrl('https://raw.githubusercontent.com/wjbaker101/ccm-scraper/master/Modrinth_TotalDownloads.txt');
+    }
+
+    public async getModrinthTotalFollowers(): Promise<Array<Datum>> {
+        return this.parseUrl('https://raw.githubusercontent.com/wjbaker101/ccm-scraper/master/Modrinth_TotalFollowers.txt');
+    }
+
     public getOldData(): Array<Datum> {
         return oldData.map(x => {
             const date = dayjs(x[0], 'DD/MM/YYYY').hour(10).second(6);

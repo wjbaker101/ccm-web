@@ -8,18 +8,26 @@ import { retrieveService } from '@/service/Retrieve.service';
 
 import pastebinUsagesOutliers from '@/data/outlier-dates.json';
 import curseforgeDownloadsOutlierDates from '@/data/curseforge-downloads-outlier-dates.json';
+import modrinthDownloadsOutlierDates from '@/data/modrinth-downloads-outlier-dates.json';
+import modrinthFollowersOutlierDates from '@/data/modrinth-followers-outlier-dates.json';
 
 const outliersMapping: Record<DataToDisplay, string[]> = {
     'pastebinUsages': pastebinUsagesOutliers,
     'curseForgeTotalDownloads': curseforgeDownloadsOutlierDates,
+    'modrinthTotalDownloads': modrinthDownloadsOutlierDates,
+    'modrinthTotalFollowers': modrinthFollowersOutlierDates,
 };
 
 const pastebinUsages = ref<Array<Datum>>([]);
 const curseForgeTotalDownloads = ref<Array<Datum>>([]);
+const modrinthTotalDownloads = ref<Array<Datum>>([]);
+const modrinthTotalFollowers = ref<Array<Datum>>([]);
 
 (async () => {
     pastebinUsages.value = await retrieveService.getPastebinUsages();
     curseForgeTotalDownloads.value = await retrieveService.getCurseForgeTotalDownloads();
+    modrinthTotalDownloads.value = await retrieveService.getModrinthTotalDownloads();
+    modrinthTotalFollowers.value = await retrieveService.getModrinthTotalFollowers();
 })();
 
 export function useData(options: Ref<Options>) {
@@ -30,6 +38,12 @@ export function useData(options: Ref<Options>) {
 
         if (options.value.dataToDisplay === 'curseForgeTotalDownloads')
             return curseForgeTotalDownloads.value;
+
+        if (options.value.dataToDisplay === 'modrinthTotalDownloads')
+            return modrinthTotalDownloads.value;
+
+        if (options.value.dataToDisplay === 'modrinthTotalFollowers')
+            return modrinthTotalFollowers.value;
 
         return [];
     });

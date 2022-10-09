@@ -1,6 +1,10 @@
 import { Datum } from '@/type/Datum.type';
 
-export type DataToDisplay = 'pastebinUsages' | 'curseForgeTotalDownloads';
+export type DataToDisplay =
+    'pastebinUsages' |
+    'curseForgeTotalDownloads' |
+    'modrinthTotalDownloads' |
+    'modrinthTotalFollowers';
 
 export interface Options {
     dataToDisplay: DataToDisplay;
