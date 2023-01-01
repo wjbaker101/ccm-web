@@ -21,30 +21,15 @@
     <GraphComponent :isFullDataEnabled="isFullDataEnabled" :dataToDisplay="dataToDisplay" />
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
-
-import { DataToDisplay } from '@/type/Options.type';
+<script setup lang="ts">
+import { ref } from 'vue';
 
 import GraphComponent from '@/component/graph/Graph.component.vue';
 
-export default defineComponent({
-    name: 'App',
+import { DataToDisplay } from '@/type/Options.type';
 
-    components: {
-        GraphComponent,
-    },
-
-    setup() {
-        const isFullDataEnabled = ref<boolean>(false);
-        const dataToDisplay = ref<DataToDisplay>('pastebinUsages');
-
-        return {
-            isFullDataEnabled,
-            dataToDisplay,
-        }
-    },
-})
+const isFullDataEnabled = ref<boolean>(false);
+const dataToDisplay = ref<DataToDisplay>('pastebinUsages');
 </script>
 
 <style lang="scss">
