@@ -3,23 +3,24 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
+        "co:login": "aws codeartifact login --tool npm --repository npm-libs --domain wjb --domain-owner 144953083930",
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build"
     },
     "dependencies": {
-        "core-js": "^3.6.5",
-        "dayjs": "^1.10.5",
-        "vue": "^3.0.0",
-        "vuex": "^4.0.0-0"
+        "core-js": "^3.27.1",
+        "dayjs": "^1.11.7",
+        "vue": "^3.2.45",
+        "vuex": "^4.1.0"
     },
     "devDependencies": {
-        "@vue/cli-plugin-babel": "~4.5.0",
-        "@vue/cli-plugin-typescript": "~4.5.0",
-        "@vue/cli-service": "~4.5.0",
-        "@vue/compiler-sfc": "^3.0.0",
-        "sass": "^1.26.5",
-        "sass-loader": "^8.0.2",
-        "typescript": "~4.1.5"
+        "@vue/cli-plugin-babel": "~5.0.8",
+        "@vue/cli-plugin-typescript": "~5.0.8",
+        "@vue/cli-service": "~5.0.8",
+        "@vue/compiler-sfc": "^3.2.45",
+        "sass": "^1.57.1",
+        "sass-loader": "^13.2.0",
+        "typescript": "~4.9.4"
     },
     "browserslist": [
         "> 1%",
