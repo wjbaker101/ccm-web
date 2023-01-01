@@ -56,8 +56,8 @@
     </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, onMounted, onUnmounted, PropType, reactive, ref } from 'vue';
+<script setup lang=ts>
+import { computed, onMounted, onUnmounted, reactive, ref } from 'vue';
 import { Dayjs } from 'dayjs';
 
 import outlierDates from '@/data/outlier-dates.json';
@@ -66,194 +66,157 @@ import { useData } from '@/component/use/Data.use';
 
 import { DataToDisplay, Options } from '@/type/Options.type';
 
-export default defineComponent({
-    name: 'GraphComponent',
+const props = defineProps<{
+    isFullDataEnabled: boolean;
+    dataToDisplay: string;
+}>();
 
-    props: {
-        isFullDataEnabled: {
-            type: Boolean,
-            required: true,
-        },
-        dataToDisplay: {
-            type: String,
-            required: true,
-        },
+const options = computed<Options>(() => ({
+    dataToDisplay: props.dataToDisplay as DataToDisplay,
+    isFullData: props.isFullDataEnabled,
+    maxDataCount: 90,
+    transform: (total, datum, index, array) => {
+        if (index > 0)
+            total.push({
+                date: datum.date,
+                value: datum.value - array[index - 1].value,
+            });
+
+        return total;
     },
+    outliers: new Set(outlierDates),
+}));
 
-    setup(props) {
-        const options = computed<Options>(() => ({
-            dataToDisplay: props.dataToDisplay as DataToDisplay,
-            isFullData: props.isFullDataEnabled,
-            maxDataCount: 90,
-            transform: (total, datum, index, array) => {
-                if (index > 0)
-                    total.push({
-                        date: datum.date,
-                        value: datum.value - array[index - 1].value,
-                    });
+const {
+    displayData,
+    minDatum,
+    maxDatum,
+    firstDatum,
+    lastDatum,
+    cumulativeTotal,
+} = useData(options);
 
-                return total;
-            },
-            outliers: new Set(outlierDates),
-        }));
+const graphComponent = ref<HTMLDivElement | null>(null);
 
-        const {
-            displayData,
-            minDatum,
-            maxDatum,
-            firstDatum,
-            lastDatum,
-            cumulativeTotal,
-        } = useData(options);
+const graphWidth = ref<number>(1024);
+const graphHeight = ref<number>(576);
 
-        const graphComponent = ref<HTMLDivElement | null>(null);
+const latestDiffValue = computed<number>(() => {
+    if (displayData.value.length < 2)
+        return 0;
 
-        const graphWidth = ref<number>(1024);
-        const graphHeight = ref<number>(576);
+    const last2 = displayData.value.slice(-2);
 
-        const latestDiffValue = computed<number>(() => {
-            if (displayData.value.length < 2)
-                return 0;
+    return last2[1].value - last2[0].value;
+});
 
-            const last2 = displayData.value.slice(-2);
+const diffColour = computed<string>(() => {
+    if (latestDiffValue.value === 0)
+        return '';
 
-            return last2[1].value - last2[0].value;
-        });
+    if (latestDiffValue.value > 0)
+        return 'is-positive';
 
-        const diffColour = computed<string>(() => {
-            if (latestDiffValue.value === 0)
-                return '';
+    return 'is-negative';
+});
 
-            if (latestDiffValue.value > 0)
-                return 'is-positive';
+const valueToY = function (value: number): number {
+    return graphHeight.value
+        - (value - minDatum.value.value)
+        * (graphHeight.value)
+        / (maxDatum.value.value - minDatum.value.value);
+};
 
-            return 'is-negative';
-        });
+const onWindowResize = function () {
+    if (graphComponent.value === null)
+        return;
 
-        const valueToY = function (value: number): number {
-            return graphHeight.value
-                - (value - minDatum.value.value)
-                * (graphHeight.value)
-                / (maxDatum.value.value - minDatum.value.value);
-        };
+    graphWidth.value = graphComponent.value.offsetWidth - 2;
+    graphHeight.value = graphComponent.value.offsetHeight - 2;
+};
 
-        const onWindowResize = function () {
-            if (graphComponent.value === null)
-                return;
+const valuesLine = computed<string>(() => {
+    const xGap = graphWidth.value / (displayData.value.length - 1);
 
-            graphWidth.value = graphComponent.value.offsetWidth - 2;
-            graphHeight.value = graphComponent.value.offsetHeight - 2;
-        };
+    const positions = displayData.value.map((datum, index) => ({
+        x: index * xGap,
+        y: valueToY(datum.value),
+    }));
 
-        const valuesLine = computed<string>(() => {
-            const xGap = graphWidth.value / (displayData.value.length - 1);
+    const points = positions.map(pos => `${pos.x} ${pos.y}`);
 
-            const positions = displayData.value.map((datum, index) => ({
-                x: index * xGap,
-                y: valueToY(datum.value),
-            }));
+    return `M${points.join(' L')}`;
+});
 
-            const points = positions.map(pos => `${pos.x} ${pos.y}`);
+const currentValueHorizontalLine = computed<string>(() => {
+    const y = valueToY(lastDatum.value.value);
 
-            return `M${points.join(' L')}`;
-        });
+    const pos1 = `0 ${y}`;
+    const pos2 = `${graphWidth.value} ${y}`;
 
-        const currentValueHorizontalLine = computed<string>(() => {
-            const y = valueToY(lastDatum.value.value);
+    return `M${[pos1, pos2].join(' L')}`;
+});
 
-            const pos1 = `0 ${y}`;
-            const pos2 = `${graphWidth.value} ${y}`;
+const displayDateRange = computed<string>(() => {
+    const span = lastDatum.value.date.from(firstDatum.value.date, true);
+    return `${span} span`;
+});
 
-            return `M${[pos1, pos2].join(' L')}`;
-        });
+onMounted(async () => {
+    window.addEventListener('resize', onWindowResize);
+    onWindowResize();
+});
 
-        const displayDateRange = computed<string>(() => {
-            const span = lastDatum.value.date.from(firstDatum.value.date, true);
-            return `${span} span`;
-        });
+onUnmounted(() => {
+    window.removeEventListener('resize', onWindowResize);
+});
 
-        onMounted(async () => {
-            window.addEventListener('resize', onWindowResize);
-            onWindowResize();
-        });
-
-        onUnmounted(() => {
-            window.removeEventListener('resize', onWindowResize);
-        });
-
-        const hoverIndicator = reactive({
-            isVisible: false,
-            x: 0,
-            label: {
-                value: '',
-                date: '',
-                x: 0,
-                y: 0,
-            },
-        });
-
-        const mousePosition = reactive({
-            x: 0,
-            y: 0,
-        });
-
-        return {
-            graphComponent,
-
-            graphWidth,
-            graphHeight,
-
-            valuesLine,
-            currentValueHorizontalLine,
-
-            minDatum,
-            maxDatum,
-            firstDatum,
-            lastDatum,
-            cumulativeTotal,
-
-            latestDiffValue,
-
-            displayDateRange,
-
-            diffColour,
-
-            hoverIndicator,
-            mousePosition,
-
-            formatDate(date: Dayjs): string {
-                return date.format('DD/MM/YYYY');
-            },
-
-            onMouseMove(event: MouseEvent) {
-                mousePosition.x = event.offsetX;
-                mousePosition.y = event.offsetY;
-
-                const ratio = mousePosition.x / graphWidth.value;
-
-                const dataIndex = Math.floor(displayData.value.length * ratio);
-
-                hoverIndicator.isVisible = true;
-                hoverIndicator.x = graphWidth.value / (displayData.value.length - 1) * dataIndex;
-
-                const datum = displayData.value[dataIndex];
-
-                const labelXOffset = 35;
-                const labelX = Math.min(graphWidth.value - labelXOffset - 5, Math.max(5 + labelXOffset, hoverIndicator.x));
-                const labelY = Math.max(5, mousePosition.y - 45);
-
-                hoverIndicator.label.value = String(datum.value);
-                hoverIndicator.label.date = datum.date.format('DD/MM/YYYY');
-                hoverIndicator.label.x = labelX;
-                hoverIndicator.label.y = labelY;
-            },
-
-            onMouseLeave() {
-                hoverIndicator.isVisible = false;
-            },
-        }
+const hoverIndicator = reactive({
+    isVisible: false,
+    x: 0,
+    label: {
+        value: '',
+        date: '',
+        x: 0,
+        y: 0,
     },
-})
+});
+
+const mousePosition = reactive({
+    x: 0,
+    y: 0,
+});
+
+const formatDate = function (date: Dayjs): string {
+    return date.format('DD/MM/YYYY');
+};
+
+const onMouseMove = function (event: MouseEvent) {
+    mousePosition.x = event.offsetX;
+    mousePosition.y = event.offsetY;
+
+    const ratio = mousePosition.x / graphWidth.value;
+
+    const dataIndex = Math.floor(displayData.value.length * ratio);
+
+    hoverIndicator.isVisible = true;
+    hoverIndicator.x = graphWidth.value / (displayData.value.length - 1) * dataIndex;
+
+    const datum = displayData.value[dataIndex];
+
+    const labelXOffset = 35;
+    const labelX = Math.min(graphWidth.value - labelXOffset - 5, Math.max(5 + labelXOffset, hoverIndicator.x));
+    const labelY = Math.max(5, mousePosition.y - 45);
+
+    hoverIndicator.label.value = String(datum.value);
+    hoverIndicator.label.date = datum.date.format('DD/MM/YYYY');
+    hoverIndicator.label.x = labelX;
+    hoverIndicator.label.y = labelY;
+};
+
+const onMouseLeave = function () {
+    hoverIndicator.isVisible = false;
+};
 </script>
 
 <style lang="scss">
