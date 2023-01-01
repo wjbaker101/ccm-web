@@ -5,16 +5,16 @@
             <div class="flex flex-auto gap-small">
                 <div class="flex-auto">
                     <small>Min: </small>
-                    <strong :title="minDatum.date">{{ minDatum.value }}</strong>
+                    <strong :title="minDatum.date.toString()">{{ minDatum.value }}</strong>
                 </div>
                 <div class="flex-auto">
                     <small>Max: </small>
-                    <strong :title="maxDatum.date">{{ maxDatum.value }}</strong>
+                    <strong :title="maxDatum.date.toString()">{{ maxDatum.value }}</strong>
                 </div>
             </div>
             <div class="flex-auto">
                 <small>Latest: </small>
-                <strong :title="lastDatum.date">{{ lastDatum.value }}</strong>
+                <strong :title="lastDatum.date.toString()">{{ lastDatum.value }}</strong>
                 <strong class="diff-value" :class="{ [diffColour]: true }"> (<span class="value">{{ latestDiffValue }}</span>)</strong>
             </div>
             <div class="flex-auto">
