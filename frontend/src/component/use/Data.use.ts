@@ -32,6 +32,15 @@ const modrinthTotalFollowers = ref<Array<Datum>>([]);
 
 export function useData(options: Ref<Options>) {
 
+    const overallDownloads = computed<number>(() => {
+        const mediaFireDownloads = 158843;
+
+        return 0
+            + (curseForgeTotalDownloads.value.at(-1)?.value ?? 0)
+            + (modrinthTotalDownloads.value.at(-1)?.value ?? 0)
+            + mediaFireDownloads;
+    });
+
     const fullData = computed<Array<Datum>>(() => {
         if (options.value.dataToDisplay === 'pastebinUsages')
             return pastebinUsages.value;
@@ -96,6 +105,8 @@ export function useData(options: Ref<Options>) {
     });
 
     return {
+        overallDownloads,
+
         displayData,
 
         minDatum,

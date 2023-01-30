@@ -19,7 +19,9 @@
                 </div>
             </div>
         </div>
-        <div></div>
+        <div>
+            Overall Downloads: {{ Intl.NumberFormat().format(overallDownloads) }}
+        </div>
     </header>
     <GraphComponent :isFullDataEnabled="isFullDataEnabled" :dataToDisplay="dataToDisplay" />
 </template>
@@ -29,10 +31,22 @@ import { ref } from 'vue';
 
 import GraphComponent from '@/component/graph/Graph.component.vue';
 
-import { DataToDisplay } from '@/type/Options.type';
+import { useData } from '@/component/use/Data.use';
+
+import { DataToDisplay, Options } from '@/type/Options.type';
+
+const data = useData(ref<Options>({
+    dataToDisplay: 'pastebinUsages',
+    isFullData: true,
+    maxDataCount: 0,
+    transform: () => [],
+    outliers: new Set(),
+}));
 
 const isFullDataEnabled = ref<boolean>(false);
 const dataToDisplay = ref<DataToDisplay>('pastebinUsages');
+
+const overallDownloads = data.overallDownloads;
 </script>
 
 <style lang="scss">
