@@ -4,23 +4,20 @@
     "private": true,
     "scripts": {
         "co:login": "aws codeartifact login --tool npm --repository npm-libs --domain wjb --domain-owner 144953083930",
-        "serve": "vue-cli-service serve",
-        "build": "vue-cli-service build"
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview"
     },
     "dependencies": {
-        "core-js": "^3.27.1",
         "dayjs": "^1.11.7",
-        "vue": "^3.2.45",
-        "vuex": "^4.1.0"
+        "vue": "^3.2.45"
     },
     "devDependencies": {
-        "@vue/cli-plugin-babel": "~5.0.8",
-        "@vue/cli-plugin-typescript": "~5.0.8",
-        "@vue/cli-service": "~5.0.8",
-        "@vue/compiler-sfc": "^3.2.45",
+        "@types/node": "^20.11.16",
+        "@vitejs/plugin-vue": "^5.0.3",
         "sass": "^1.57.1",
-        "sass-loader": "^13.2.0",
-        "typescript": "~4.9.4"
+        "typescript": "~4.9.4",
+        "vite": "^5.1.0"
     },
     "browserslist": [
         "> 1%",
