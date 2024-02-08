@@ -8,6 +8,11 @@ export default defineConfig({
         vue(),
     ],
 
+    build: {
+        outDir: '../backend/wwwroot',
+        emptyOutDir: true,
+    },
+
     resolve: {
         alias: [
             {
